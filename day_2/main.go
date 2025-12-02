@@ -55,8 +55,6 @@ func getTotalFromRanges(ranges []string) int {
 	return total
 }
 
-// Read the input file of comma separated ranges and split by ','
-// Then return a sorted list of ranges
 func readInputFile(file *os.File) []string {
 	ranges := []string{}
 	scanner := bufio.NewScanner(file)
