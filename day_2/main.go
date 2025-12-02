@@ -11,62 +11,49 @@ import (
 
 const FILE_PATH = "input/aoc2025_day2_input.txt"
 
-func getTotal(ids []string) int {
-	total := 0
-
-	for _, i := range ids {
-		in, err := strconv.Atoi(i)
-
-		if err != nil {
-			fmt.Printf("Could not convert %d into number \n", in)
-			break
-		}
-
-		total += in
+func hasRepeatingHalves(n int) bool {
+	s := strconv.Itoa(n)
+	l := len(s)
+	
+	if l%2 != 0 {
+		return false
 	}
-
-	return total
+	
+	mid := l / 2
+	return s[:mid] == s[mid:]
 }
 
-// Iterate through list of ranges and get the min / max of each range
-// Then perform inner loop to find numbers in between ranges
-func findInvalidIds(ids []string) []string {
-	invalidIds := []string{}
 
-	for _, id := range ids {
-		split := strings.Split(id, "-")
+func getTotalFromRanges(ranges []string) int {
+	total := 0
+	m := make(map[int]bool)
+
+	for _, r := range ranges {
+		split := strings.Split(r, "-")
 
 		min, err := strconv.Atoi(split[0])
 
 		if err != nil {
 			fmt.Printf("Could not convert %d into min number \n", min)
-			break
+			continue
 		}
 
 		max, err := strconv.Atoi(split[1])
 
 		if err != nil {
 			fmt.Printf("Could not convert %d into max number \n", max)
-			break
+			continue
 		}
 
-		for i := min; i < max; i++ {
-			s := strconv.Itoa(i)
-			l := len(s)
-			index := l / 2
-
-			if(l > 1) {
-				first := s[:index]
-				second := s[index:]
-
-				if(first == second) {
-					invalidIds = append(invalidIds, s)
-				}
+		for i := min; i <= max; i++ {
+			if !m[i] && hasRepeatingHalves(i) {
+				m[i] = true
+				total += i
 			}
 		}
 	}
 
-	return invalidIds
+	return total
 }
 
 // Read the input file of comma separated ranges and split by ','
@@ -76,7 +63,7 @@ func readInputFile(file *os.File) []string {
 	scanner := bufio.NewScanner(file)
 
 	for scanner.Scan() {
-		line := scanner.Text()
+		line := strings.TrimSpace(scanner.Text())
 		r := strings.Split(line, ",")
 		ranges = append(ranges, r...)
 	}
@@ -101,9 +88,7 @@ func main() {
 
 	ranges := readInputFile(file)
 
-	ids := findInvalidIds(ranges)
-
-	result := getTotal(ids)
+	result := getTotalFromRanges(ranges)
 	
 	fmt.Println(result)
 }
