@@ -1,0 +1,32 @@
+# Binaries for the current project
+*.exe
+*.dll
+*.so
+*.dylib
+*.test
+*.prof
+
+# Compiled binaries for other platforms (cross-compilation)
+bin/
+
+# Temporary files and build artifacts
+tmp/
+vendor/ # If you are not using Go Modules or want to ignore vendored dependencies
+pkg/
+
+# Editor and IDE specific files
+.idea/
+.vscode/
+*.swp
+*~
+.DS_Store
+
+# Log files
+*.log
+
+# Environment-specific configuration files
+.env
+.env.*
+
+# Go module cache
+go.mod.sum
