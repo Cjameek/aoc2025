@@ -17,32 +17,41 @@ const (
 const STARTING_POS = 50
 const FILE_PATH = "input/aoc2025_day1_input.txt"
 
-func turnDial(steps int, dir DialDirection, startPos int) int {
+func turnDial(steps int, dir DialDirection, startPos int) (int, int) {
+	const dialSize = 100
+	
 	if dir == Left {
-		for i := 0; i < steps; i++ {
-			startPos--
+		finalPos := (startPos - steps) % dialSize
 
-			if startPos < 0 {
-				startPos = 99
+		if finalPos < 0 {
+			finalPos += dialSize
+		}
+		
+		iterations := 0
+
+		if steps > 0 {
+			stepsToZero := startPos
+
+			if stepsToZero == 0 {
+				stepsToZero = dialSize
+			}
+			
+			if steps >= stepsToZero {
+				iterations = 1 + (steps-stepsToZero)/dialSize
 			}
 		}
-
-		return startPos
+		
+		return finalPos, iterations
 	}
 	
 	if dir == Right {
-		for i := 0; i < steps; i++ {
-			startPos++
-
-			if startPos > 99 {
-				startPos = 0
-			}
-		}
-
-		return startPos
+		finalPos := (startPos + steps) % dialSize
+		iterations := (startPos + steps) / dialSize
+		
+		return finalPos, iterations
 	}
-
-	return startPos
+	
+	return startPos, 0
 }
 
 func main() {
@@ -70,12 +79,10 @@ func main() {
 			break
 		}
 
-		output := turnDial(steps, dir, currentPos)
+		output, iteration := turnDial(steps, dir, currentPos)
 		currentPos = output
-
-		if output == 0 {
-			finalPasscode++
-		}
+		finalPasscode = finalPasscode + iteration
+		
 
 		fmt.Printf("Turned dial %s %d steps to position %d \n", dir, steps, output)
 	}
@@ -83,6 +90,7 @@ func main() {
 	if 	err := scanner.Err(); err != nil {
 		fmt.Printf("Error reading file: %v \n", err)
 	}
+	
 	fmt.Println("-----")
 	fmt.Printf("Final passcode: %d \n", finalPasscode)
 }
