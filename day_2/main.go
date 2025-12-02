@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"fmt"
 	"os"
-	"sort"
 	"strconv"
 	"strings"
 )
@@ -71,8 +70,6 @@ func readInputFile(file *os.File) []string {
 	if err := scanner.Err(); err != nil {
 		fmt.Printf("Error reading file: %v \n", err)
 	}
-
-	sort.Strings(ranges)
 
 	return ranges
 }
